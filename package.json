@@ -1,0 +1,30 @@
+{
+  "name": "demo-torrent-app",
+  "longname": "Demo Torrnet App",
+  "namespace": "com.tint2.demo-torrent-app",
+  "version": "1.0.0",
+  "description": "Demo torrent application",
+  "author": "True Interactions",
+  "main": "main.js",
+  "sources": {
+    "directory": "."
+  },
+  "icon": {
+    "windows": [
+      "icon.png"
+    ],
+    "osx": [
+      "icon.png"
+    ]
+  },
+  "exclude": "\\.tern-port|\\.git|build",
+  "license": "MIT",
+  "copyright": "2015 True Interactions",
+  "dependencies": {
+    "average": "0.0.1",
+    "debounce": "^1.0.0",
+    "moment": "^2.11.1",
+    "numeral": "^1.5.3",
+    "webtorrent": "^0.63.3"
+  }
+}
