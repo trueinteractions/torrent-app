@@ -1,13 +1,9 @@
 require('Common');
-var debounce = require('debounce');
+var throttle = require('lodash.throttle');
 var WebTorrent = require('webtorrent');
 var wt = new WebTorrent();
 
 var TorrentDownloadTable = require('./download-view.js');
-
-// application.registerHotKey('q', 'cmd', function(){
-
-// })
 
 var win = new Window();
 
@@ -32,7 +28,7 @@ addTorrent.addEventListener('click', function() {
 	fileDialog.on('select', function() {
 		var torrentFile = fileDialog.selection[0];
 		wt.download(torrentFile, { path: config.downloadPath }, function(torrent) {
-			torrent.id = logview.addTorrent(torrent);
+			logview.addTorrent(torrent);
 		});
 	});
 });
@@ -41,25 +37,16 @@ toolbar.appendChild([
 	addTorrent
 ]);
 
-var logview = new TorrentDownloadTable();
-logview.form.visible = true;
-logview.form.top = 50;
+var logview = new TorrentDownloadTable({form: {visible: true, top: 50}});
 win.appendChild(logview.form);
 
 /*
  * Torrent Instance
  */
 
-var torrents = [];
-
-// wt.download('./test.torrent', { path: '.' }, function(torrent) {
-// 	var t = logview.addTorrent(torrent);
-// 	torrents.push(t);
-// });
-
-var update = debounce(function(torrent) {
+var update = throttle(function(torrent) {
 	logview.updateProgress(torrent);
-}, 80);
+}, 200);
 
 wt.on('torrent', function(torrent) {
 	torrent.on('download', function(){
