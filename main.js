@@ -14,8 +14,7 @@ var toolbar = new Toolbar();
 win.toolbar = toolbar;
 
 var config = {
-	downloadPath: '.',
-	selectedTorrent: {}
+	downloadPath: '.'
 };
 
 var addTorrent = new ToolbarItem();
@@ -32,6 +31,16 @@ addTorrent.addEventListener('click', function() {
 		});
 	});
 });
+
+// var settings = new ToolbarItem({
+// 	tooltip: 'Download Directory',
+// 	image: 'action'
+// });
+// settings.addEventListener('click', function() {
+// 	var fileDialoag = new FileDialog('open');
+// 	fileDialog
+// });
+
 
 toolbar.appendChild([
 	addTorrent
@@ -54,6 +63,29 @@ wt.on('torrent', function(torrent) {
 	});
 
 	torrent.on('done', function() {
+		update.flush();
 		update(torrent);
+
+		Notification.requestPermission(function(response) {
+			if (response) {
+				var notif = new Notification();
+				notif.title = 'Torrent has finished downloading.';
+				notif.subtitle = torrent.name + ' is complete';
+				notif.text = torrent.name + ' is complete';
+				notif.dispatch();
+			}
+		});
 	});
 });
+
+/*
+ * If torrents exist from previous session re-start them
+ */
+
+// var prevTor = application.storage.torrents;
+
+// if (prevTor) {
+// 	prevTor.forEach(function(torrent) {
+// 		logview.addTorrent(torrent);
+// 	});
+// }

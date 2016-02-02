@@ -16,15 +16,15 @@ var Torrent = function(torrent) {
 	var progressBar = new ProgressBar({
 		left: leftpadding,
 		top: rowHeight + 5,
-		right: 40
+		right: 60
 	});
 
 	var percent = new TextInput({
-		right: 0,
+		right: 5,
 		top: rowHeight + 5,
 		readonly: true,
-		widht: 40,
-		alignment: 'center'
+		width: 50,
+		alignment: 'right'
 	});
 
 	var downSpeed = new TextInput({
@@ -74,7 +74,7 @@ var Torrent = function(torrent) {
 	progressBar.value = torrent.progress;
 	downSpeed.value = '▼ ' + numeral(torrent.downloadSpeed()).format('0.0a');
 	upSpeed.value = '▲ ' + numeral(torrent.uploadSpeed()).format('0.0a');
-	percent.value = numeral(torrent.progress).format('0%');
+	percent.value = numeral(torrent.progress).format('0.00%');
 	torrentTitle.value = torrent.name;
 	timeRemainingValue.value = '500 days';
 
@@ -89,7 +89,7 @@ var Torrent = function(torrent) {
 			timeRemainingValue.value = moment.duration(torrent.timeRemaining).humanize();
 		}
 		upSpeed.value = '▲ ' + numeral(torrent.uploadSpeed()).format('0.0a');
-		percent.value = numeral(torrent.progress).format('0%');
+		percent.value = numeral(torrent.progress).format('0.00%');
 	};
 
 };
