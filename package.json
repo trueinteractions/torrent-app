@@ -17,7 +17,7 @@
       "icon.png"
     ]
   },
-  "exclude": "\\.tern-port|\\.git|build|node_modules",
+  "exclude": "",
   "license": "MIT",
   "copyright": "2015 True Interactions",
   "dependencies": {

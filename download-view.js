@@ -16,8 +16,8 @@ module.exports = function(win) {
 
 	this.rownum = 0;
 
-	this.addTorrent = function(torrent) {
-		torrents[torrent.name] = new Torrent(torrent);
+	this.addTorrent = function(torrent, downloadPath) {
+		torrents[torrent.name] = new Torrent(torrent, downloadPath);
 
 		this.logs.addRow();
 		this.logs.setValueAt('Torrents', this.rownum, torrents[torrent.name].torrentView);

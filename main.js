@@ -1,21 +1,48 @@
 require('Common');
 var throttle = require('lodash.throttle');
 var WebTorrent = require('webtorrent');
+var TorrentDownloadTable = require('./download-view.js');
 var wt = new WebTorrent();
 
-var TorrentDownloadTable = require('./download-view.js');
-
 var win = new Window();
+var settings = {},
+		storage;
+
+// Error Logging
+process.on('uncaughtException', function(err) {
+	console.log(err, err.stack);
+});
+
+try {
+	storage = JSON.parse(application.storage);
+} catch(err) {
+	console.log(err)
+}
+
+if (!storage) {
+	console.log('no previous settings')
+	// Set default settings
+	settings = {
+		downloadPath: System.home + '/Downloads',
+	};
+} else if (storage && !storage.downloadPath) {
+	console.log('no previous settings.downloadPath')
+	settings.downloadPath = System.home + '/Downloads';
+} else {
+	console.log('previous settings')
+	settings = JSON.parse(application.storage);
+}
+
+process.on('exit', function() {
+	console.log(settings);
+	application.storage = JSON.stringify(settings);
+});
 
 win.visible = true;
 win.title = 'Demo Torrent App';
 
 var toolbar = new Toolbar();
 win.toolbar = toolbar;
-
-var config = {
-	downloadPath: '.'
-};
 
 var addTorrent = new ToolbarItem();
 addTorrent.tooltip = 'Add torrent files to download';
@@ -26,21 +53,17 @@ addTorrent.addEventListener('click', function() {
 	fileDialog.open(win);
 	fileDialog.on('select', function() {
 		var torrentFile = fileDialog.selection[0];
-		wt.download(torrentFile, { path: config.downloadPath }, function(torrent) {
-			logview.addTorrent(torrent);
+		wt.download(torrentFile, { path: settings.downloadPath }, function(torrent) {
+			logview.addTorrent(torrent, settings.downloadPath + '/' + torrent.name);
+			if (!settings.torrents) {
+				settings.torrents = {};
+				settings.torrents[torrent.name] = torrentFile;
+			} else {
+				settings.torrents[torrent.name] = torrentFile;
+			}
 		});
 	});
 });
-
-// var settings = new ToolbarItem({
-// 	tooltip: 'Download Directory',
-// 	image: 'action'
-// });
-// settings.addEventListener('click', function() {
-// 	var fileDialoag = new FileDialog('open');
-// 	fileDialog
-// });
-
 
 toolbar.appendChild([
 	addTorrent
@@ -72,6 +95,10 @@ wt.on('torrent', function(torrent) {
 				notif.title = 'Torrent has finished downloading.';
 				notif.subtitle = torrent.name + ' is complete';
 				notif.text = torrent.name + ' is complete';
+				notif.buttonLabel = 'Show';
+				notif.addEventListener('click', function() {
+					System.openFile(settings.downloadPath + '/' + torrent.name);
+				});
 				notif.dispatch();
 			}
 		});
@@ -82,10 +109,12 @@ wt.on('torrent', function(torrent) {
  * If torrents exist from previous session re-start them
  */
 
-// var prevTor = application.storage.torrents;
+var prevTor = settings.torrents;
 
-// if (prevTor) {
-// 	prevTor.forEach(function(torrent) {
-// 		logview.addTorrent(torrent);
-// 	});
-// }
+if (prevTor) {
+	for (var i in prevTor) {
+		wt.download(prevTor[i], { path: settings.downloadPath }, function(torrent) {
+			logview.addTorrent(torrent, settings.downloadPath + '/' + torrent.name);
+		});
+	}
+}

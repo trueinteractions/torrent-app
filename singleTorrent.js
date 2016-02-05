@@ -2,7 +2,7 @@
 var numeral = require('numeral');
 var moment = require('moment');
 
-var Torrent = function(torrent) {
+var Torrent = function(torrent, downloadPath) {
 	var rowHeight = 15;
 	var leftpadding = 5;
 
@@ -58,6 +58,17 @@ var Torrent = function(torrent) {
 		alignment: 'center'
 	});
 
+	var showTorrent = new Button({
+		right: 5,
+		bottom: 5,
+		title: 'Show'
+	});
+	showTorrent.addEventListener('click', function() {
+		console.log('before crash ', downloadPath);
+		console.log(System.home);
+		System.openFile(downloadPath);
+	});
+
 	this.torrentView = new Container();
 	this.torrentView.appendChild(
 		[
@@ -67,7 +78,8 @@ var Torrent = function(torrent) {
 			upSpeed,
 			percent,
 			timeReamaingLabel,
-			timeRemainingValue
+			timeRemainingValue,
+			showTorrent
 		]
 	);
 
