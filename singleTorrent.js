@@ -5,6 +5,7 @@ var moment = require('moment');
 var Torrent = function(torrent, downloadPath) {
 	var rowHeight = 15;
 	var leftpadding = 5;
+	this.torrent = torrent;
 
 	var torrentTitle = new TextInput({
 		left: leftpadding,
@@ -63,9 +64,8 @@ var Torrent = function(torrent, downloadPath) {
 		bottom: 5,
 		title: 'Show'
 	});
+
 	showTorrent.addEventListener('click', function() {
-		console.log('before crash ', downloadPath);
-		console.log(System.home);
 		System.openFile(downloadPath);
 	});
 
@@ -102,6 +102,10 @@ var Torrent = function(torrent, downloadPath) {
 		}
 		upSpeed.value = '▲ ' + numeral(torrent.uploadSpeed()).format('0.0a');
 		percent.value = numeral(torrent.progress).format('0.00%');
+	};
+
+	this.remove = function() {
+		this.torrent.destroy();
 	};
 
 };

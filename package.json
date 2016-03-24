@@ -1,7 +1,7 @@
 {
-  "name": "demo-torrent-app",
-  "longname": "Demo Torrnet App",
-  "namespace": "com.tint2.demo-torrent-app",
+  "name": "tint-torrent-app",
+  "longname": "Tint Torrent App",
+  "namespace": "com.tint2.torrent-app",
   "version": "1.0.0",
   "description": "Demo torrent application",
   "author": "True Interactions",

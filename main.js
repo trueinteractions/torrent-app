@@ -5,41 +5,17 @@ var TorrentDownloadTable = require('./download-view.js');
 var wt = new WebTorrent();
 
 var win = new Window();
-var settings = {},
-		storage;
+var settings = {};
 
 // Error Logging
 process.on('uncaughtException', function(err) {
 	console.log(err, err.stack);
 });
 
-try {
-	storage = JSON.parse(application.storage);
-} catch(err) {
-	console.log(err)
-}
-
-if (!storage) {
-	console.log('no previous settings')
-	// Set default settings
-	settings = {
-		downloadPath: System.home + '/Downloads',
-	};
-} else if (storage && !storage.downloadPath) {
-	console.log('no previous settings.downloadPath')
-	settings.downloadPath = System.home + '/Downloads';
-} else {
-	console.log('previous settings')
-	settings = JSON.parse(application.storage);
-}
-
-process.on('exit', function() {
-	console.log(settings);
-	application.storage = JSON.stringify(settings);
-});
+settings.downloadPath = System.home + '/Downloads';
 
 win.visible = true;
-win.title = 'Demo Torrent App';
+win.title = 'Tint Torrent App';
 
 var toolbar = new Toolbar();
 win.toolbar = toolbar;
@@ -65,8 +41,17 @@ addTorrent.addEventListener('click', function() {
 	});
 });
 
+var removeTorrent = new ToolbarItem({
+	tooltip: 'Remove Selected Torrent From The App',
+	image: 'remove'
+});
+removeTorrent.addEventListener('click', function() {
+	logview.removeTorrent();
+});
+
 toolbar.appendChild([
-	addTorrent
+	addTorrent,
+	removeTorrent
 ]);
 
 var logview = new TorrentDownloadTable({form: {visible: true, top: 50}});
@@ -109,12 +94,12 @@ wt.on('torrent', function(torrent) {
  * If torrents exist from previous session re-start them
  */
 
-var prevTor = settings.torrents;
+// var prevTor = settings.torrents;
 
-if (prevTor) {
-	for (var i in prevTor) {
-		wt.download(prevTor[i], { path: settings.downloadPath }, function(torrent) {
-			logview.addTorrent(torrent, settings.downloadPath + '/' + torrent.name);
-		});
-	}
-}
+// if (prevTor) {
+// 	for (var i in prevTor) {
+// 		wt.download(prevTor[i], { path: settings.downloadPath }, function(torrent) {
+// 			logview.addTorrent(torrent, settings.downloadPath + '/' + torrent.name);
+// 		});
+// 	}
+// }
