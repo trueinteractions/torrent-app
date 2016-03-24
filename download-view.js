@@ -36,14 +36,16 @@ module.exports = function(win) {
 
 	this.removeTorrent = function() {
 		var torrent = torrents.torrents[this.logs.selectedRows[0]];
-		torrents.torrents.forEach(function(tor, idx) {
-			if (torrent.name === tor.name) {
-				tor.destroy();
-				torrents.torrents.splice(idx, 1);
-			}
-		});
-		delete torrents[torrent.name];
-		this.logs.removeRow();
-		this.updateOrder();
+		if (torrent && torrent.name) {
+			torrents.torrents.forEach(function(tor, idx) {
+				if (torrent.name === tor.name) {
+					tor.destroy();
+					torrents.torrents.splice(idx, 1);
+				}
+			});
+			delete torrents[torrent.name];
+			this.logs.removeRow();
+			this.updateOrder();
+		}
 	};
 };

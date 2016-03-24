@@ -23,3 +23,5 @@ This is a simple torrent app. It is built using Tint2 and [webtorrent](https://g
 	```
 
 	You'll find the bundled app in `/build`
+
+There is a .torrent file included in the repo if you don't want to be bothered to find one of your own.
